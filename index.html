@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pacman Attack</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <canvas></canvas>
+
+  <div id="hud" style="display:none;">
+    <button id="restartBtn">RESTART</button>
+    <button id="menuBtn">MENU</button>
+    <p>SCORE:<span id="scoreEl">0</span></p>
+    <!--<p id="levelDisplay">LEVEL: 1 (EASY)</p>-->
+    <div id="livesDisplay" style="font-family:'Press Start 2P', monospace; font-size:14px;">
+      LIVES: <span id="livesBar"></span>
+    </div>
+   </div>
+  </div>
+
+  <div id="startMenu">
+    <h1>Pacman Attack</h1>
+    <button id="playBtn">Play</button>
+    <button id="storyBtn">Story</button>
+    <button id="instructionsBtn">Instructions</button>
+    <button id="leaderboardBtn">Leaderboard</button>
+  </div>
+
+  <!-- Story Modal -->
+  <div id="storyModal" class="modal" style="display:none;">
+    <div class="modal-content story-content">
+      <div id="storySlides">
+        <!-- Slide 1 -->
+        <div class="story-slide active" data-slide="1">
+          <div class="story-box">
+            <h2 style="color:#FFD700; text-align:center;">🟡 PACMAN ATTACK 🟡</h2>
+            <p class="story-paragraph">Pacman has protected the <span class="highlight">Maze World</span> for a long time, but one day, a strange portal opens in the sky above the arcade world.</p>
+          </div>
+          <div class="continue-prompt">▼ Click to continue ▼</div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="story-slide" data-slide="2">
+          <div class="story-box">
+            <p class="story-paragraph">From this portal, hundreds of ghosts start falling.</p>
+            <p class="story-paragraph">These ghosts aren't normal, they've been changed, copied many times, and turned into an attacking swarm by a glitchy enemy called</p>
+          </div>
+          <div class="continue-prompt">▼ Click to continue ▼</div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="story-slide" data-slide="3">
+          <div class="story-box">
+            <h2 style="color:#FF00FF; text-align:center; font-size:24px; margin:40px 0; text-shadow: 0 0 20px #FF00FF, 0 0 40px #FF00FF;">The Pixel Wraith</h2>
+            <p class="story-paragraph danger">A broken piece of old arcade code...</p>
+          </div>
+          <div class="continue-prompt">▼ Click to continue ▼</div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="story-slide" data-slide="4">
+          <div class="story-box">
+            <p class="story-paragraph"><span class="highlight">The Pixel Wraith</span> has taken over the Ghost Network and is trying to change the whole world into its buggy, messed-up version.</p>
+            <p class="story-paragraph">The arcade world is in danger!</p>
+          </div>
+          <div class="continue-prompt">▼ Click to continue ▼</div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="story-slide" data-slide="5">
+          <div class="story-box">
+            <p class="story-paragraph">To stop the attack, <span class="highlight">Pacman flies into space</span>.</p>
+            <p class="story-paragraph">He's ready with:</p>
+            <ul class="powers-list">
+              <li>🟡 <span style="color:#FFD700;">Rapid-Fire Bites</span></li>
+              <li>🟢 <span style="color:#00FF00;">Rechargeable Shield</span></li>
+              <li>🔵 <span style="color:#00BFFF;">Power-up Pellets</span></li>
+            </ul>
+          </div>
+          <div class="continue-prompt">▼ Click to continue ▼</div>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="story-slide" data-slide="6">
+          <div class="story-box">
+            <p class="story-paragraph">Pacman must blast through wave after wave of falling ghosts before they reach the ground and drain the life of the arcade world.</p>
+            <p class="story-paragraph danger">Each wave gets stronger.<br>Each ghost falls quicker.<br>And the Pixel Wraith keeps getting stronger too.</p>
+          </div>
+          <div class="continue-prompt">▼ Click to continue ▼</div>
+        </div>
+
+        <!-- Slide 7 - Final -->
+        <div class="story-slide" data-slide="7">
+          <div class="story-box">
+            <h3 style="color:#FFD700; text-align:center; font-size:20px; margin-bottom:30px;">Pacman's Mission:</h3>
+            <p class="story-paragraph" style="text-align:center; font-size:14px; line-height:2;">
+              Survive, fight the ghost swarm,<br>
+              <span class="highlight">defeat the Pixel Wraith</span>,<br>
+              to shut it down for good.
+            </p>
+            <p class="story-paragraph" style="text-align:center; color:#FF0000; font-size:16px; margin-top:40px; text-shadow: 0 0 10px #FF0000;">
+              Only Pacman can stop the ghostfall<br>and save the arcade world!
+            </p>
+          </div>
+          <button id="startFromStory" style="
+            padding: 15px 30px;
+            background: #FFD700;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            margin-top: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px #FFD700;
+          ">START PLAYING</button>
+          <button id="skipStory" style="
+            padding: 10px 20px;
+            background: #555;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+          ">BACK TO MENU</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Username Input Modal -->
+  <div id="usernameModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>ENTER USERNAME</h2>
+      <input type="text" id="usernameInput" maxlength="15" placeholder="Your Name" style="
+        width: 80%;
+        padding: 12px;
+        margin: 20px 0;
+        background: #222;
+        border: 2px solid #555;
+        color: #c0c0c0;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 14px;
+        text-align: center;
+      ">
+      <br>
+      <button id="startGameBtn" style="
+        padding: 12px 24px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 12px;
+      ">START GAME</button>
+    </div>
+  </div>
+
+  <!-- Leaderboard Modal -->
+  <div id="leaderboardModal" class="modal" style="display:none;">
+    <div class="modal-content" style="min-width: 400px;">
+      <span id="closeLeaderboard" class="close">&times;</span>
+      <h2>LEADERBOARD</h2>
+      <div id="leaderboardList" style="
+        margin: 20px 0;
+        text-align: left;
+        max-height: 400px;
+        overflow-y: auto;
+      "></div>
+      <button id="closeLeaderboardBtn" style="
+        padding: 10px 20px;
+        background: #555;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 10px;
+        margin-top: 10px;
+      ">CLOSE</button>
+    </div>
+  </div>
+
+  <div id="instructionsModal" class="modal">
+    <div class="modal-content">
+      <span id="closeInstructions" class="close">&times;</span>
+      <h2>INSTRUCTIONS</h2>
+      <h3 style="color:#FFD700; font-size:14px; margin-top:20px;">Keyboard Controls:</h3>
+      <ul>
+        <li>Move Left: Press A / ←</li>
+        <li>Move Right: Press D / →</li>
+        <li>Shoot: Press Space Bar</li>
+        <li>Shield: Press S</li>
+        <li>Shoot Rapidly: Press F</li>
+      </ul>
+      <h3 style="color:#FFD700; font-size:14px; margin-top:20px;">Mouse Controls:</h3>
+      <ul>
+        <li>Move: Move Mouse</li>
+        <li>Shoot: Click Mouse</li>
+        <li>Rapid Fire: Hold Mouse Button</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="gameOverMenu" style="display:none;">
+    <h2>GAME OVER</h2>
+    <button id="restartBtn">RESTART</button>
+  </div>
+
+  <div id="mobileControls" style="display:none; position:fixed; bottom:20px; width:100%; justify-content:center; gap:20px; z-index:1000;">
+    <button id="leftBtn"><</button>
+    <button id="shootBtn">●</button>
+    <button id="rightBtn">></button>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
